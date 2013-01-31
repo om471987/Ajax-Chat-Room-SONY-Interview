@@ -8,14 +8,21 @@ using ChatRoom.Web.Models;
 
 namespace ChatRoom.Web
 {
+    /// <summary>
+    /// Keeps track of the connections
+    /// </summary>
     public class ChatWithTracking : Hub
     {
         private readonly static ConnectionMapping<string> _connections = new ConnectionMapping<string>();
 
+        /// <summary>
+        /// Sends messages to the clients
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="sender"></param>
         public void Send(string message, string sender)
         {
             string name = Context.QueryString["name"];
-            
             if (message.StartsWith("@") && message.Contains(":"))
             {
                 var user = string.Empty;
@@ -35,6 +42,9 @@ namespace ChatRoom.Web
             Clients.All.send(name + ": " + message);
         }
 
+        /// <summary>
+        /// Pushes userlist to clients
+        /// </summary>
         public void GetUserList()
         {
             var oSerializer = new JavaScriptSerializer();
@@ -43,6 +53,10 @@ namespace ChatRoom.Web
             Clients.All.userList(json);
         }
 
+        /// <summary>
+        /// Adds connection to the list
+        /// </summary>
+        /// <returns></returns>
         public override Task OnConnected()
         {
             string name = Context.QueryString["name"];
@@ -54,6 +68,10 @@ namespace ChatRoom.Web
             return base.OnConnected();
         }
 
+        /// <summary>
+        /// Removes connection from the list
+        /// </summary>
+        /// <returns></returns>
         public override Task OnDisconnected()
         {
             string name = Context.QueryString["name"];
