@@ -9,14 +9,13 @@
     <title></title>
 </head>
 <body>
-    <div style="position: absolute; left: 0; top: 0; height: 100%; width: 100%">
-    <select multiple="multiple" id="users" style="float:left;width:20%; height: 95%;"></select>
-    <p id="chatWindow" style="position:relative; left: 0; top: -15px; height: 95%; width: 80%;background-color: #eeeeee;float:left;"></p>
-    <div style="bottom:0;position:absolute;width:80%;height:5%;float:left;">
+    <div style="position: absolute; left: 0; top: 0; height: 80%; width: 100%">
+    <select id="users" style="float:left;width:20%; height: 80%;"></select>
+    <p id="chatWindow" style="position:relative; left: 0; top: -15px; height: 80%; width: 80%;background-color: #eeeeee;float:left;"></p>
+    <div style="bottom:0;position:absolute;width:80%;height:5%;float:left;margin-left:200px;">
         <span style="float:left;">Message: </span><input type="text" id="textMessage"  style="float:left;height:80%;width:90%;background-color:#CCCCCC" />
-    </div>
-    <div style="float:left;width:20%; height: 5%;">
-        <input type="button" id="SendMessage" value="Send" style="width:100%;height:100%" />
+        <input type="button" id="SendMessage" value="Send" style="width:100px;height:40px;float:right;margin-top:20px;" />
+        <div style="clear:both"></div>
     </div>
 </div>
 
@@ -50,6 +49,7 @@
                     options += '<option value="' + message[index] + '">' + message[index] + '</option>';
                 });
                 $("select#users").html(options);
+                $("select#users").attr("size", message.length);
             }
 
             $('#users').change(function () {
