@@ -1,0 +1,70 @@
+﻿@model ChatRoom.Web.Models.ClientModel
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <div style="position: absolute; left: 0; top: 0; height: 100%; width: 100%">
+    <select multiple="multiple" id="users" style="float:left;width:20%; height: 95%;"></select>
+    <p id="chatWindow" style="position:relative; left: 0; top: -15px; height: 95%; width: 80%;background-color: #eeeeee;float:left;"></p>
+    <div style="bottom:0;position:absolute;width:80%;height:5%;float:left;">
+        <span style="float:left;">Message: </span><input type="text" id="textMessage"  style="float:left;height:80%;width:90%;background-color:#CCCCCC" />
+    </div>
+    <div style="float:left;width:20%; height: 5%;">
+        <input type="button" id="SendMessage" value="Send" style="width:100%;height:100%" />
+    </div>
+</div>
+
+    <script src="~/Scripts/jquery-1.9.0.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-1.0.0-rc2.min.js"></script>
+    <script src="~/signalR/hubs"></script>
+    <script>
+        $(function () {
+            var chat = $.connection.chatWithTracking;
+
+            chat.client.send = function (message) {
+                message = $("#chatWindow").html() + "<br />" + message;
+                $("#chatWindow").html(message);
+                $('#textMessage').val('');
+                $('#textMessage').focus();
+            };
+
+            $.connection.hub.qs = "name=@Model.Name";
+
+            $.connection.hub.start().done(function () {
+                $('#SendMessage').click(function () {
+                    chat.server.send($('#textMessage').val(),'@Model.Name');
+                });
+                $('#textMessage').focus();
+            });
+
+            chat.client.userList = function (message) {
+                message = JSON.parse(message);
+                var options;
+                $.each(message, function (index) {
+                    options += '<option value="' + message[index] + '">' + message[index] + '</option>';
+                });
+                $("select#users").html(options);
+            }
+
+            $('#users').change(function () {
+                if ($("#users").val() !== null) {
+                    $("#textMessage").val('@@' + $("#users").val() + ': ');
+                }
+                $('#textMessage').focus();
+            });
+
+            $("#textMessage").keyup(function (event) {
+                if (event.keyCode == 13) {
+                    $("#SendMessage").click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

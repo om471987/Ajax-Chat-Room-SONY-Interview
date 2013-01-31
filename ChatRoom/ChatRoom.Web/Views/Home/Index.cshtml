@@ -1,0 +1,39 @@
+﻿@model ChatRoom.Web.Models.ClientModel
+@{
+    Layout = "";
+}     
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <table>
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.Name)
+                @Html.TextBoxFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <td style="color:red">@Html.ValidationMessageFor(model=>model.Name)</td>
+            <td style="color:red">@ViewBag.DuplicateUser</td>
+        </tr>
+        <tr>
+            <td>
+                 <input type="submit" id="submit" value="Login" />            
+            </td>
+        </tr>
+    </table>
+}
+
+<script src="~/Scripts/jquery-1.9.0.min.js"></script>
+
+<script>
+    $(function () {
+        $("#Name").focus();
+    });
+    $("#Name").keyup(function (event) {
+        if (event.keyCode == 13) {
+            $("#submit").click();
+        }
+    });
+</script>
