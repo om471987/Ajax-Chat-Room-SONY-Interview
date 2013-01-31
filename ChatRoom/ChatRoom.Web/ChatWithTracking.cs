@@ -60,6 +60,8 @@ namespace ChatRoom.Web
 
             _connections.Remove(name, Context.ConnectionId);
 
+            GetUserList();
+
             return base.OnDisconnected();
         }        
     }
